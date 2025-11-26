@@ -29,11 +29,11 @@ const seasonalThemes = {
 
 // House image mapping - images go in public/images/
 const houseImages = {
-  'Adlerbastei': '/images/adlerbastei.jpg',
-  'Adlerbastei 1.OG': '/images/adlerbastei-1og.jpg',
-  'Kranzegg': '/images/kranzegg.jpg',
-  'Park Avenue': '/images/park-avenue.jpg',
-  'Ski Shores': '/images/ski-shores.jpg',
+  'Adlerbastei': '/images/adlerbastei.jpeg',
+  'Adlerbastei 1.OG': '/images/adlerbastei-1og.jpeg',
+  'Kranzegg': '/images/kranzegg.jpeg',
+  'Park Avenue': '/images/park-avenue.jpeg',
+  'Ski Shores': '/images/ski-shores.jpeg',
 };
 
 // SVG Icons
