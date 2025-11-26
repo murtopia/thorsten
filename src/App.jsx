@@ -139,11 +139,11 @@ const getLocalTime = (timezone) => {
 };
 
 const housesData = [
-  { id: 1, name: 'Adlerbastei', timezone: 'Europe/Berlin', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.3, low: 17.8 }, shades: { total: 9, open: 0 }, lights: { total: 50, on: 0 } },
-  { id: 2, name: 'Adlerbastei 1.OG', timezone: 'Europe/Berlin', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.7, low: 17.0 }, shades: { total: 9, open: 0 }, lights: { total: 32, on: 0 } },
-  { id: 3, name: 'Kranzegg', timezone: 'Europe/Berlin', weather: { condition: 'cloudy', high: 15, low: 8 }, locks: { total: 7, unlocked: 2 }, temp: { high: 16.0, low: 14.8 }, shades: { total: 19, open: 0 }, lights: { total: 76, on: 3 } },
-  { id: 4, name: 'Park Avenue', timezone: 'America/New_York', weather: { condition: 'sunny', high: 24, low: 18 }, locks: { total: 1, unlocked: 0 }, temp: { high: 22.7, low: 21.3 }, shades: { total: 5, open: 0 }, lights: { total: 37, on: 0 } },
-  { id: 5, name: 'Ski Shores', timezone: 'America/Chicago', weather: { condition: 'sunny', high: 26, low: 19 }, locks: { total: 4, unlocked: 0 }, temp: { high: 24.1, low: 22.8 }, shades: { total: 12, open: 2 }, lights: { total: 33, on: 0 } },
+  { id: 1, name: 'Adlerbastei', timezone: 'Europe/Berlin', location: 'Ulm, BW Germany', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.3, low: 17.8 }, shades: { total: 9, open: 0 }, lights: { total: 50, on: 0 } },
+  { id: 2, name: 'Adlerbastei 1.OG', timezone: 'Europe/Berlin', location: 'Ulm, BW Germany', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.7, low: 17.0 }, shades: { total: 9, open: 0 }, lights: { total: 32, on: 0 } },
+  { id: 3, name: 'Kranzegg', timezone: 'Europe/Berlin', location: 'Kranzegg, BY Germany', weather: { condition: 'cloudy', high: 15, low: 8 }, locks: { total: 7, unlocked: 2 }, temp: { high: 16.0, low: 14.8 }, shades: { total: 19, open: 0 }, lights: { total: 76, on: 3 } },
+  { id: 4, name: 'Park Avenue', timezone: 'America/New_York', location: 'New York, NY USA', weather: { condition: 'sunny', high: 24, low: 18 }, locks: { total: 1, unlocked: 0 }, temp: { high: 22.7, low: 21.3 }, shades: { total: 5, open: 0 }, lights: { total: 37, on: 0 } },
+  { id: 5, name: 'Ski Shores', timezone: 'America/Chicago', location: 'Austin, TX USA', weather: { condition: 'sunny', high: 26, low: 19 }, locks: { total: 4, unlocked: 0 }, temp: { high: 24.1, low: 22.8 }, shades: { total: 12, open: 2 }, lights: { total: 33, on: 0 } },
 ];
 
 export default function App() {
@@ -217,7 +217,7 @@ export default function App() {
           justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <h3 style={{ 
                   color: 'white', fontSize: '26px', fontWeight: '700', margin: 0,
@@ -233,12 +233,13 @@ export default function App() {
                 }} />
               </div>
               <span style={{
-                color: 'rgba(255,255,255,0.7)',
-                fontSize: '13px',
-                fontWeight: '400',
-                textShadow: '0 1px 4px rgba(0,0,0,0.5)',
+                color: 'rgba(255,255,255,0.75)',
+                fontSize: '14px',
+                fontWeight: '500',
+                textShadow: '0 1px 4px rgba(0,0,0,0.6)',
+                marginTop: '2px',
               }}>
-                {getLocalTime(house.timezone)}
+                {getLocalTime(house.timezone)} • {house.location}
               </span>
             </div>
             
