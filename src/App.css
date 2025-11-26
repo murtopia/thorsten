@@ -98,16 +98,19 @@
   justify-content: center;
 }
 
-.houses-list {
+.scrollable-content {
   flex: 1;
-  padding: 0 16px 16px;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.houses-list {
+  padding: 0 16px 16px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: relative;
-  z-index: 1;
 }
 
 .tab-bar-container {

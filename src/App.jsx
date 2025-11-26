@@ -217,12 +217,13 @@ export default function App() {
           justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <h3 style={{ 
                   color: 'white', fontSize: '26px', fontWeight: '700', margin: 0,
                   textShadow: '0 2px 12px rgba(0,0,0,0.7)',
                   letterSpacing: '-0.3px',
+                  lineHeight: '1.1',
                 }}>
                   {house.name}
                 </h3>
@@ -237,7 +238,7 @@ export default function App() {
                 fontSize: '14px',
                 fontWeight: '500',
                 textShadow: '0 1px 4px rgba(0,0,0,0.6)',
-                marginTop: '2px',
+                lineHeight: '1.2',
               }}>
                 {getLocalTime(house.timezone)} • {house.location}
               </span>
@@ -294,24 +295,27 @@ export default function App() {
         ))}
       </div>
 
-      {/* Status Bar */}
-      <div className="status-bar">
-        <span>14:17</span>
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', fontSize: '12px' }}>
-          <span>5G</span><span>📶</span><span>🔋 68%</span>
+      {/* Scrollable Content */}
+      <div className="scrollable-content">
+        {/* Status Bar */}
+        <div className="status-bar">
+          <span>14:17</span>
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', fontSize: '12px' }}>
+            <span>5G</span><span>📶</span><span>🔋 68%</span>
+          </div>
         </div>
-      </div>
 
-      {/* Header */}
-      <div className="header">
-        <h1>{holiday ? `Daheim 🎉` : 'Daheim'}</h1>
-        <button className="settings-btn"><SettingsIcon /></button>
-      </div>
+        {/* Header */}
+        <div className="header">
+          <h1>{holiday ? `Daheim 🎉` : 'Daheim'}</h1>
+          <button className="settings-btn"><SettingsIcon /></button>
+        </div>
 
-      {/* Houses List */}
-      <div className="houses-list">
-        {houses.map(house => <HouseCard key={house.id} house={house} />)}
-        <div style={{ height: '80px', flexShrink: 0 }} />
+        {/* Houses List */}
+        <div className="houses-list">
+          {houses.map(house => <HouseCard key={house.id} house={house} />)}
+          <div style={{ height: '100px', flexShrink: 0 }} />
+        </div>
       </div>
 
       {/* Tab Bar */}
