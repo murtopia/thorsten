@@ -128,12 +128,22 @@ const HouseBackground = ({ houseName }) => (
   />
 );
 
+// Helper to get local time in 24hr format for a timezone
+const getLocalTime = (timezone) => {
+  return new Date().toLocaleTimeString('de-DE', { 
+    timeZone: timezone, 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  });
+};
+
 const housesData = [
-  { id: 1, name: 'Adlerbastei', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.3, low: 17.8 }, shades: { total: 9, open: 0 }, lights: { total: 50, on: 0 } },
-  { id: 2, name: 'Adlerbastei 1.OG', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.7, low: 17.0 }, shades: { total: 9, open: 0 }, lights: { total: 32, on: 0 } },
-  { id: 3, name: 'Kranzegg', weather: { condition: 'cloudy', high: 15, low: 8 }, locks: { total: 7, unlocked: 2 }, temp: { high: 16.0, low: 14.8 }, shades: { total: 19, open: 0 }, lights: { total: 76, on: 3 } },
-  { id: 4, name: 'Park Avenue', weather: { condition: 'sunny', high: 24, low: 18 }, locks: { total: 1, unlocked: 0 }, temp: { high: 22.7, low: 21.3 }, shades: { total: 5, open: 0 }, lights: { total: 37, on: 0 } },
-  { id: 5, name: 'Ski Shores', weather: { condition: 'sunny', high: 26, low: 19 }, locks: { total: 4, unlocked: 0 }, temp: { high: 24.1, low: 22.8 }, shades: { total: 0, open: 2 }, lights: { total: 33, on: 0 } },
+  { id: 1, name: 'Adlerbastei', timezone: 'Europe/Berlin', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.3, low: 17.8 }, shades: { total: 9, open: 0 }, lights: { total: 50, on: 0 } },
+  { id: 2, name: 'Adlerbastei 1.OG', timezone: 'Europe/Berlin', weather: { condition: 'partlyCloudy', high: 18, low: 12 }, locks: { total: 2, unlocked: 0 }, temp: { high: 20.7, low: 17.0 }, shades: { total: 9, open: 0 }, lights: { total: 32, on: 0 } },
+  { id: 3, name: 'Kranzegg', timezone: 'Europe/Berlin', weather: { condition: 'cloudy', high: 15, low: 8 }, locks: { total: 7, unlocked: 2 }, temp: { high: 16.0, low: 14.8 }, shades: { total: 19, open: 0 }, lights: { total: 76, on: 3 } },
+  { id: 4, name: 'Park Avenue', timezone: 'America/New_York', weather: { condition: 'sunny', high: 24, low: 18 }, locks: { total: 1, unlocked: 0 }, temp: { high: 22.7, low: 21.3 }, shades: { total: 5, open: 0 }, lights: { total: 37, on: 0 } },
+  { id: 5, name: 'Ski Shores', timezone: 'America/Chicago', weather: { condition: 'sunny', high: 26, low: 19 }, locks: { total: 4, unlocked: 0 }, temp: { high: 24.1, low: 22.8 }, shades: { total: 12, open: 2 }, lights: { total: 33, on: 0 } },
 ];
 
 export default function App() {
@@ -148,23 +158,23 @@ export default function App() {
 
     const renderIcon = () => {
       switch(type) {
-        case 'locks': return isActive ? <UnlockedIcon color={color} size={28} /> : <LockIcon color={color} size={28} />;
-        case 'temp': return <ThermometerIcon color={color} size={28} />;
-        case 'shades': return isActive ? <ShadesOpenIcon color={color} size={28} /> : <ShadesClosedIcon color={color} size={28} />;
-        case 'lights': return <LightbulbIcon color={color} size={28} filled={isActive} />;
+        case 'locks': return isActive ? <UnlockedIcon color={color} size={22} /> : <LockIcon color={color} size={22} />;
+        case 'temp': return <ThermometerIcon color={color} size={22} />;
+        case 'shades': return isActive ? <ShadesOpenIcon color={color} size={22} /> : <ShadesClosedIcon color={color} size={22} />;
+        case 'lights': return <LightbulbIcon color={color} size={22} filled={isActive} />;
         default: return null;
       }
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1 }}>
-        <div style={{ filter: isActive ? `drop-shadow(0 0 12px ${activeColor})` : 'none', transition: 'filter 0.3s ease' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
+        <div style={{ filter: isActive ? `drop-shadow(0 0 10px ${activeColor})` : 'none', transition: 'filter 0.3s ease' }}>
           {renderIcon()}
         </div>
         <div style={{ 
           textAlign: 'center', color: isActive ? activeColor : 'rgba(255,255,255,0.95)',
-          fontWeight: '600', fontSize: '14px', fontVariantNumeric: 'tabular-nums',
-          textShadow: isActive ? `0 0 12px ${activeColor}` : '0 2px 4px rgba(0,0,0,0.5)',
+          fontWeight: '600', fontSize: '12px', fontVariantNumeric: 'tabular-nums',
+          textShadow: isActive ? `0 0 10px ${activeColor}` : '0 2px 4px rgba(0,0,0,0.5)',
         }}>
           {type === 'temp' ? <span>{value}°</span> : <span>{value}<span style={{ opacity: 0.6, fontWeight: '400' }}>/{total}</span></span>}
         </div>
@@ -207,19 +217,29 @@ export default function App() {
           justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <h3 style={{ 
-                color: 'white', fontSize: '26px', fontWeight: '700', margin: 0,
-                textShadow: '0 2px 12px rgba(0,0,0,0.7)',
-                letterSpacing: '-0.3px',
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h3 style={{ 
+                  color: 'white', fontSize: '26px', fontWeight: '700', margin: 0,
+                  textShadow: '0 2px 12px rgba(0,0,0,0.7)',
+                  letterSpacing: '-0.3px',
+                }}>
+                  {house.name}
+                </h3>
+                <div style={{
+                  width: '14px', height: '14px', borderRadius: '50%',
+                  background: isSecure ? '#4ade80' : '#fbbf24',
+                  boxShadow: isSecure ? '0 0 14px rgba(74, 222, 128, 0.9)' : '0 0 14px rgba(251, 191, 36, 0.9)',
+                }} />
+              </div>
+              <span style={{
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '13px',
+                fontWeight: '400',
+                textShadow: '0 1px 4px rgba(0,0,0,0.5)',
               }}>
-                {house.name}
-              </h3>
-              <div style={{
-                width: '14px', height: '14px', borderRadius: '50%',
-                background: isSecure ? '#4ade80' : '#fbbf24',
-                boxShadow: isSecure ? '0 0 14px rgba(74, 222, 128, 0.9)' : '0 0 14px rgba(251, 191, 36, 0.9)',
-              }} />
+                {getLocalTime(house.timezone)}
+              </span>
             </div>
             
             <div style={{
@@ -239,20 +259,20 @@ export default function App() {
           <div style={{
             background: 'linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 100%)',
             backdropFilter: 'blur(30px) saturate(150%)', WebkitBackdropFilter: 'blur(30px) saturate(150%)',
-            borderRadius: '24px',
+            borderRadius: '20px',
             border: '1px solid rgba(255,255,255,0.3)',
             boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 32px rgba(0,0,0,0.25)',
-            padding: '20px 16px',
+            padding: '10px 12px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
             <StatusIndicator value={house.locks.unlocked} total={house.locks.total} type="locks" isActive={hasUnlockedDoors} />
-            <div style={{ width: '1px', height: '50px', background: 'rgba(255,255,255,0.25)' }} />
+            <div style={{ width: '1px', height: '36px', background: 'rgba(255,255,255,0.25)' }} />
             <StatusIndicator value={house.temp.low.toFixed(1)} total={house.temp.high.toFixed(1)} type="temp" isActive={false} />
-            <div style={{ width: '1px', height: '50px', background: 'rgba(255,255,255,0.25)' }} />
+            <div style={{ width: '1px', height: '36px', background: 'rgba(255,255,255,0.25)' }} />
             <StatusIndicator value={house.shades.open} total={house.shades.total} type="shades" isActive={hasShadesOpen} />
-            <div style={{ width: '1px', height: '50px', background: 'rgba(255,255,255,0.25)' }} />
+            <div style={{ width: '1px', height: '36px', background: 'rgba(255,255,255,0.25)' }} />
             <StatusIndicator value={house.lights.on} total={house.lights.total} type="lights" isActive={hasLightsOn} />
           </div>
         </div>
