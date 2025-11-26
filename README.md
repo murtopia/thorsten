@@ -1,17 +1,31 @@
 # Daheim - Home Automation Dashboard
 
-A beautiful iOS-inspired home automation dashboard built with React and Vite.
+A beautiful iOS 26 "Liquid Glass" inspired home automation dashboard built with React and Vite.
+
+**Live Demo:** https://thorsten.vercel.app/
 
 ## Features
 
 - 🏠 Monitor multiple properties at a glance
+- 🕐 Live local time per property (with timezone support)
+- 📍 Location display (City, State, Country)
 - 🔒 Door lock status indicators
 - 🌡️ Temperature monitoring
 - 🪟 Shade/blind status
 - 💡 Lighting overview
 - 🌤️ Weather display per location
 - 🎨 Seasonal themes (spring, summer, autumn, winter, Christmas!)
-- ✨ iOS 26 "Liquid Glass" design aesthetic
+- ✨ iOS 26 "Liquid Glass" glassmorphism design
+
+## Properties
+
+| Property | Location | Timezone |
+|----------|----------|----------|
+| Adlerbastei | Ulm, BW Germany | Europe/Berlin |
+| Adlerbastei 1.OG | Ulm, BW Germany | Europe/Berlin |
+| Kranzegg | Kranzegg, BY Germany | Europe/Berlin |
+| Park Avenue | New York, NY USA | America/New_York |
+| Ski Shores | Austin, TX USA | America/Chicago |
 
 ## Setup
 
@@ -21,67 +35,69 @@ A beautiful iOS-inspired home automation dashboard built with React and Vite.
 npm install
 ```
 
-### 2. Add your house images
-
-Place your house photos in the `public/images/` folder with these exact names:
-
-- `adlerbastei.jpg`
-- `adlerbastei-1og.jpg`
-- `kranzegg.jpg`
-- `park-avenue.jpg`
-- `ski-shores.jpg`
-
-### 3. Run locally
+### 2. Run locally
 
 ```bash
 npm run dev
 ```
 
-## Deploy to Vercel
+Opens at http://localhost:5173
 
-### Option 1: Via GitHub (Recommended)
-
-1. Push this repo to GitHub:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/home-automation.git
-   git push -u origin main
-   ```
-
-2. Go to [vercel.com](https://vercel.com)
-3. Click "New Project"
-4. Import your GitHub repository
-5. Click "Deploy" - Vercel auto-detects Vite!
-
-### Option 2: Via Vercel CLI
+### 3. Build for production
 
 ```bash
-npm install -g vercel
-vercel
+npm run build
 ```
+
+## House Images
+
+Images are stored in `public/images/` with `.jpeg` extension:
+- `adlerbastei.jpeg`
+- `adlerbastei-1og.jpeg`
+- `kranzegg.jpeg`
+- `park-avenue.jpeg`
+- `ski-shores.jpeg`
 
 ## Customization
 
 ### Modify house data
 
-Edit the `housesData` array in `src/App.jsx` to match your properties.
+Edit the `housesData` array in `src/App.jsx`:
 
-### Change image mappings
+```jsx
+{
+  id: 1,
+  name: 'Adlerbastei',
+  timezone: 'Europe/Berlin',
+  location: 'Ulm, BW Germany',
+  weather: { condition: 'partlyCloudy', high: 18, low: 12 },
+  locks: { total: 2, unlocked: 0 },
+  temp: { high: 20.3, low: 17.8 },
+  shades: { total: 9, open: 0 },
+  lights: { total: 50, on: 0 }
+}
+```
 
-Update the `houseImages` object in `src/App.jsx` if you want different filenames.
+### Seasonal themes
 
-### Adjust themes
+Modify the `seasonalThemes` object to customize gradients and particles for each season.
 
-Modify the `seasonalThemes` object to customize colors for each season.
+## Deployment
+
+This repo auto-deploys to Vercel when pushing to the `main` branch.
+
+```bash
+git add -A
+git commit -m "Your changes"
+git push
+```
 
 ## Tech Stack
 
 - React 18
 - Vite
-- CSS3 (with backdrop-filter for glass effects)
+- Pure CSS (with `backdrop-filter` for glass effects)
+- Vercel (hosting)
 
 ## License
 
