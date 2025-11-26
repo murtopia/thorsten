@@ -1,0 +1,56 @@
+# Daheim - Home Automation Dashboard
+
+## Project Overview
+iOS 26 "Liquid Glass" inspired home automation dashboard built with React + Vite.
+
+**Live URL:** https://thorsten.vercel.app/
+**GitHub:** https://github.com/murtopia/thorsten
+
+## Tech Stack
+- React 18 + Vite
+- Pure CSS (glassmorphism with backdrop-filter)
+- Vercel (auto-deploys from GitHub)
+
+## Current State (as of Nov 2024)
+✅ 5 house cards with real photos
+✅ Local time + location display (e.g., "18:33 • Ulm, BW Germany")
+✅ Timezone support (Europe/Berlin, America/New_York, America/Chicago)
+✅ Status indicators: locks, temp, shades, lights
+✅ Color-coded security (green = secure, amber = attention)
+✅ Seasonal themes with particles (currently autumn 🍂)
+✅ Scrollable layout (header scrolls away)
+✅ Bottom tab bar
+
+🚧 Pending: Tab navigation, settings panel, house detail views, real data integration
+
+## Houses
+| Name | Location | Timezone |
+|------|----------|----------|
+| Adlerbastei | Ulm, BW Germany | Europe/Berlin |
+| Adlerbastei 1.OG | Ulm, BW Germany | Europe/Berlin |
+| Kranzegg | Kranzegg, BY Germany | Europe/Berlin |
+| Park Avenue | New York, NY USA | America/New_York |
+| Ski Shores | Austin, TX USA | America/Chicago |
+
+## Key Files
+- `src/App.jsx` - All components in one file
+- `src/App.css` - Global styles
+- `public/images/*.jpeg` - House photos
+
+## Git Commands
+```bash
+git add -A && git commit -m "message" && git push
+```
+SSH is configured - pushes work from command line.
+
+## Design Colors
+- Secure: #4ade80 (green)
+- Attention: #fbbf24 (amber)
+- Alert: #ef4444 (red)
+
+## Notes
+- Mobile-first design (max-width: 420px)
+- Images use .jpeg extension
+- "Daheim" = German for "home"
+- Awaiting Thorsten's approval before building detail views
+
