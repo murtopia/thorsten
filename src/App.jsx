@@ -300,21 +300,45 @@ export default function App() {
     );
   };
 
-  // Compact tile for grid view
-  const CompactTile = ({ house, isLarge = false }) => {
+  // Compact horizontal card for grid view
+  const CompactCard = ({ house }) => {
     const hasUnlockedDoors = house.locks.unlocked > 0;
     const hasLightsOn = house.lights.on > 0;
     const hasShadesOpen = house.shades.open > 0;
     const isSecure = !hasUnlockedDoors && !hasLightsOn;
+    
+    const activeColor = { locks: '#ef4444', temp: '#f59e0b', shades: '#fbbf24', lights: '#facc15' };
+
+    const MiniStatus = ({ value, total, type, isActive }) => {
+      const color = isActive ? activeColor[type] : 'rgba(255,255,255,0.9)';
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+          <div style={{ filter: isActive ? `drop-shadow(0 0 6px ${activeColor[type]})` : 'none' }}>
+            {type === 'locks' && (isActive ? <UnlockedIcon color={color} size={16} /> : <LockIcon color={color} size={16} />)}
+            {type === 'temp' && <ThermometerIcon color={color} size={16} />}
+            {type === 'shades' && (isActive ? <ShadesOpenIcon color={color} size={16} /> : <ShadesClosedIcon color={color} size={16} />)}
+            {type === 'lights' && <LightbulbIcon color={color} size={16} filled={isActive} />}
+          </div>
+          <span style={{ 
+            color: color, 
+            fontSize: '9px', 
+            fontWeight: '600',
+            textShadow: isActive ? `0 0 8px ${activeColor[type]}` : '0 1px 2px rgba(0,0,0,0.5)',
+          }}>
+            {type === 'temp' ? `${value}°` : `${value}/${total}`}
+          </span>
+        </div>
+      );
+    };
 
     return (
       <div style={{
         position: 'relative',
-        borderRadius: isLarge ? '24px' : '20px',
+        borderRadius: '18px',
         overflow: 'hidden',
         height: '100%',
         border: isSecure ? '2px solid rgba(74, 222, 128, 0.4)' : '2px solid rgba(251, 191, 36, 0.4)',
-        boxShadow: `0 8px 24px rgba(0,0,0,0.3)`,
+        boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
         cursor: 'pointer',
       }}>
         <HouseBackground houseName={house.name} />
@@ -322,96 +346,58 @@ export default function App() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.75) 100%)',
+          background: 'linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.6) 100%)',
         }} />
 
         <div style={{
           position: 'relative',
           height: '100%',
-          padding: isLarge ? '14px' : '10px',
+          padding: '10px 12px',
           display: 'flex',
-          flexDirection: 'column',
           justifyContent: 'space-between',
+          alignItems: 'center',
         }}>
-          {/* Top: Weather */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: '4px',
-              background: 'rgba(0,0,0,0.4)',
-              backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-              borderRadius: '10px', padding: '4px 8px',
-              border: '1px solid rgba(255,255,255,0.1)',
-            }}>
-              <WeatherIcon condition={house.weather.condition} size={14} />
-              <span style={{ color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                {house.weather.high}°
-              </span>
-            </div>
-          </div>
-
-          {/* Bottom: Info */}
-          <div>
-            {/* House name + status */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+          {/* Left: House info */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ 
                 color: 'white', 
-                fontSize: isLarge ? '16px' : '13px', 
+                fontSize: '16px', 
                 fontWeight: '700',
                 textShadow: '0 2px 8px rgba(0,0,0,0.8)',
-                lineHeight: '1.1',
               }}>
                 {house.name}
               </span>
               <div style={{
-                width: isLarge ? '10px' : '8px', 
-                height: isLarge ? '10px' : '8px', 
-                borderRadius: '50%',
+                width: '10px', height: '10px', borderRadius: '50%',
                 background: isSecure ? '#4ade80' : '#fbbf24',
-                boxShadow: isSecure ? '0 0 8px rgba(74, 222, 128, 0.8)' : '0 0 8px rgba(251, 191, 36, 0.8)',
-                flexShrink: 0,
+                boxShadow: isSecure ? '0 0 10px rgba(74, 222, 128, 0.8)' : '0 0 10px rgba(251, 191, 36, 0.8)',
               }} />
             </div>
-            
-            {/* Time + Location */}
-            <div style={{
+            <span style={{
               color: 'rgba(255,255,255,0.7)',
-              fontSize: isLarge ? '11px' : '9px',
+              fontSize: '11px',
               fontWeight: '500',
               textShadow: '0 1px 3px rgba(0,0,0,0.6)',
-              marginBottom: '6px',
             }}>
               {getLocalTime(house.timezone)} • {house.location.split(',')[0]}
-            </div>
+            </span>
+          </div>
 
-            {/* Mini status icons */}
-            <div style={{
-              display: 'flex',
-              gap: isLarge ? '8px' : '6px',
-              background: 'rgba(255,255,255,0.15)',
-              backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              borderRadius: '10px',
-              padding: isLarge ? '6px 8px' : '4px 6px',
-              border: '1px solid rgba(255,255,255,0.2)',
-            }}>
-              <div style={{ filter: hasUnlockedDoors ? 'drop-shadow(0 0 6px #ef4444)' : 'none' }}>
-                {hasUnlockedDoors ? 
-                  <UnlockedIcon color="#ef4444" size={isLarge ? 16 : 14} /> : 
-                  <LockIcon color="rgba(255,255,255,0.8)" size={isLarge ? 16 : 14} />
-                }
-              </div>
-              <div>
-                <ThermometerIcon color="rgba(255,255,255,0.8)" size={isLarge ? 16 : 14} />
-              </div>
-              <div style={{ filter: hasShadesOpen ? 'drop-shadow(0 0 6px #fbbf24)' : 'none' }}>
-                {hasShadesOpen ? 
-                  <ShadesOpenIcon color="#fbbf24" size={isLarge ? 16 : 14} /> : 
-                  <ShadesClosedIcon color="rgba(255,255,255,0.8)" size={isLarge ? 16 : 14} />
-                }
-              </div>
-              <div style={{ filter: hasLightsOn ? 'drop-shadow(0 0 6px #facc15)' : 'none' }}>
-                <LightbulbIcon color={hasLightsOn ? "#facc15" : "rgba(255,255,255,0.8)"} size={isLarge ? 16 : 14} filled={hasLightsOn} />
-              </div>
-            </div>
+          {/* Right: Status indicators */}
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            background: 'rgba(0,0,0,0.35)',
+            backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+            borderRadius: '12px',
+            padding: '6px 10px',
+            border: '1px solid rgba(255,255,255,0.15)',
+          }}>
+            <MiniStatus value={house.locks.unlocked} total={house.locks.total} type="locks" isActive={hasUnlockedDoors} />
+            <MiniStatus value={house.temp.low.toFixed(0)} total={house.temp.high.toFixed(0)} type="temp" isActive={false} />
+            <MiniStatus value={house.shades.open} total={house.shades.total} type="shades" isActive={hasShadesOpen} />
+            <MiniStatus value={house.lights.on} total={house.lights.total} type="lights" isActive={hasLightsOn} />
           </div>
         </div>
       </div>
@@ -463,41 +449,23 @@ export default function App() {
           </div>
         </div>
       ) : (
-        /* Compact Grid View - Everything fits on one screen */
+        /* Compact Grid View - 5 horizontal cards stacked */
         <div style={{
           flex: 1,
-          padding: '0 12px 12px',
+          padding: '0 12px',
+          paddingBottom: '90px', // Space for tab bar
           display: 'flex',
           flexDirection: 'column',
-          gap: '10px',
+          gap: '8px',
           overflow: 'hidden',
           position: 'relative',
           zIndex: 1,
         }}>
-          {/* Top row: 2 tiles */}
-          <div style={{ display: 'flex', gap: '10px', flex: 1, minHeight: 0 }}>
-            <div style={{ flex: 1 }}>
-              <CompactTile house={houses[0]} isLarge />
+          {houses.map(house => (
+            <div key={house.id} style={{ flex: 1, minHeight: 0 }}>
+              <CompactCard house={house} />
             </div>
-            <div style={{ flex: 1 }}>
-              <CompactTile house={houses[1]} isLarge />
-            </div>
-          </div>
-          
-          {/* Middle row: 2 tiles */}
-          <div style={{ display: 'flex', gap: '10px', flex: 1, minHeight: 0 }}>
-            <div style={{ flex: 1 }}>
-              <CompactTile house={houses[2]} isLarge />
-            </div>
-            <div style={{ flex: 1 }}>
-              <CompactTile house={houses[3]} isLarge />
-            </div>
-          </div>
-          
-          {/* Bottom row: 1 wide tile */}
-          <div style={{ flex: 0.8, minHeight: 0 }}>
-            <CompactTile house={houses[4]} isLarge />
-          </div>
+          ))}
         </div>
       )}
 
