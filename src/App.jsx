@@ -146,9 +146,27 @@ const housesData = [
   { id: 5, name: 'Ski Shores', timezone: 'America/Chicago', location: 'Austin, TX USA', weather: { condition: 'sunny', high: 26, low: 19 }, locks: { total: 4, unlocked: 0 }, temp: { high: 24.1, low: 22.8 }, shades: { total: 12, open: 2 }, lights: { total: 33, on: 0 } },
 ];
 
+// Grid/Expand toggle icon
+const GridIcon = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="3" width="7" height="7" rx="1"/>
+    <rect x="14" y="3" width="7" height="7" rx="1"/>
+    <rect x="3" y="14" width="7" height="7" rx="1"/>
+    <rect x="14" y="14" width="7" height="7" rx="1"/>
+  </svg>
+);
+
+const ListIcon = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="3" width="18" height="6" rx="1"/>
+    <rect x="3" y="11" width="18" height="6" rx="1"/>
+  </svg>
+);
+
 export default function App() {
   const [houses] = useState(housesData);
   const [activeTab, setActiveTab] = useState('home');
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const { season, holiday } = getSeasonAndHoliday();
   const theme = seasonalThemes[season];
 
@@ -282,6 +300,124 @@ export default function App() {
     );
   };
 
+  // Compact tile for grid view
+  const CompactTile = ({ house, isLarge = false }) => {
+    const hasUnlockedDoors = house.locks.unlocked > 0;
+    const hasLightsOn = house.lights.on > 0;
+    const hasShadesOpen = house.shades.open > 0;
+    const isSecure = !hasUnlockedDoors && !hasLightsOn;
+
+    return (
+      <div style={{
+        position: 'relative',
+        borderRadius: isLarge ? '24px' : '20px',
+        overflow: 'hidden',
+        height: '100%',
+        border: isSecure ? '2px solid rgba(74, 222, 128, 0.4)' : '2px solid rgba(251, 191, 36, 0.4)',
+        boxShadow: `0 8px 24px rgba(0,0,0,0.3)`,
+        cursor: 'pointer',
+      }}>
+        <HouseBackground houseName={house.name} />
+        
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.75) 100%)',
+        }} />
+
+        <div style={{
+          position: 'relative',
+          height: '100%',
+          padding: isLarge ? '14px' : '10px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}>
+          {/* Top: Weather */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '4px',
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+              borderRadius: '10px', padding: '4px 8px',
+              border: '1px solid rgba(255,255,255,0.1)',
+            }}>
+              <WeatherIcon condition={house.weather.condition} size={14} />
+              <span style={{ color: 'white', fontSize: '11px', fontWeight: '600' }}>
+                {house.weather.high}°
+              </span>
+            </div>
+          </div>
+
+          {/* Bottom: Info */}
+          <div>
+            {/* House name + status */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+              <span style={{ 
+                color: 'white', 
+                fontSize: isLarge ? '16px' : '13px', 
+                fontWeight: '700',
+                textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+                lineHeight: '1.1',
+              }}>
+                {house.name}
+              </span>
+              <div style={{
+                width: isLarge ? '10px' : '8px', 
+                height: isLarge ? '10px' : '8px', 
+                borderRadius: '50%',
+                background: isSecure ? '#4ade80' : '#fbbf24',
+                boxShadow: isSecure ? '0 0 8px rgba(74, 222, 128, 0.8)' : '0 0 8px rgba(251, 191, 36, 0.8)',
+                flexShrink: 0,
+              }} />
+            </div>
+            
+            {/* Time + Location */}
+            <div style={{
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: isLarge ? '11px' : '9px',
+              fontWeight: '500',
+              textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+              marginBottom: '6px',
+            }}>
+              {getLocalTime(house.timezone)} • {house.location.split(',')[0]}
+            </div>
+
+            {/* Mini status icons */}
+            <div style={{
+              display: 'flex',
+              gap: isLarge ? '8px' : '6px',
+              background: 'rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+              borderRadius: '10px',
+              padding: isLarge ? '6px 8px' : '4px 6px',
+              border: '1px solid rgba(255,255,255,0.2)',
+            }}>
+              <div style={{ filter: hasUnlockedDoors ? 'drop-shadow(0 0 6px #ef4444)' : 'none' }}>
+                {hasUnlockedDoors ? 
+                  <UnlockedIcon color="#ef4444" size={isLarge ? 16 : 14} /> : 
+                  <LockIcon color="rgba(255,255,255,0.8)" size={isLarge ? 16 : 14} />
+                }
+              </div>
+              <div>
+                <ThermometerIcon color="rgba(255,255,255,0.8)" size={isLarge ? 16 : 14} />
+              </div>
+              <div style={{ filter: hasShadesOpen ? 'drop-shadow(0 0 6px #fbbf24)' : 'none' }}>
+                {hasShadesOpen ? 
+                  <ShadesOpenIcon color="#fbbf24" size={isLarge ? 16 : 14} /> : 
+                  <ShadesClosedIcon color="rgba(255,255,255,0.8)" size={isLarge ? 16 : 14} />
+                }
+              </div>
+              <div style={{ filter: hasLightsOn ? 'drop-shadow(0 0 6px #facc15)' : 'none' }}>
+                <LightbulbIcon color={hasLightsOn ? "#facc15" : "rgba(255,255,255,0.8)"} size={isLarge ? 16 : 14} filled={hasLightsOn} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="app-container" style={{ background: theme.gradient }}>
       {/* Particles */}
@@ -295,28 +431,75 @@ export default function App() {
         ))}
       </div>
 
-      {/* Scrollable Content */}
-      <div className="scrollable-content">
-        {/* Status Bar */}
-        <div className="status-bar">
-          <span>14:17</span>
-          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', fontSize: '12px' }}>
-            <span>5G</span><span>📶</span><span>🔋 68%</span>
-          </div>
-        </div>
-
-        {/* Header */}
-        <div className="header">
-          <h1>{holiday ? `Daheim 🎉` : 'Daheim'}</h1>
-          <button className="settings-btn"><SettingsIcon /></button>
-        </div>
-
-        {/* Houses List */}
-        <div className="houses-list">
-          {houses.map(house => <HouseCard key={house.id} house={house} />)}
-          <div style={{ height: '100px', flexShrink: 0 }} />
+      {/* Status Bar */}
+      <div className="status-bar">
+        <span>14:17</span>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', fontSize: '12px' }}>
+          <span>5G</span><span>📶</span><span>🔋 68%</span>
         </div>
       </div>
+
+      {/* Header */}
+      <div className="header">
+        <h1>{holiday ? `Daheim 🎉` : 'Daheim'}</h1>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button 
+            className="settings-btn"
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+            style={{ color: 'white' }}
+          >
+            {viewMode === 'grid' ? <ListIcon /> : <GridIcon />}
+          </button>
+          <button className="settings-btn"><SettingsIcon /></button>
+        </div>
+      </div>
+
+      {viewMode === 'list' ? (
+        /* Scrollable List View */
+        <div className="scrollable-content">
+          <div className="houses-list">
+            {houses.map(house => <HouseCard key={house.id} house={house} />)}
+            <div style={{ height: '100px', flexShrink: 0 }} />
+          </div>
+        </div>
+      ) : (
+        /* Compact Grid View - Everything fits on one screen */
+        <div style={{
+          flex: 1,
+          padding: '0 12px 12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          overflow: 'hidden',
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          {/* Top row: 2 tiles */}
+          <div style={{ display: 'flex', gap: '10px', flex: 1, minHeight: 0 }}>
+            <div style={{ flex: 1 }}>
+              <CompactTile house={houses[0]} isLarge />
+            </div>
+            <div style={{ flex: 1 }}>
+              <CompactTile house={houses[1]} isLarge />
+            </div>
+          </div>
+          
+          {/* Middle row: 2 tiles */}
+          <div style={{ display: 'flex', gap: '10px', flex: 1, minHeight: 0 }}>
+            <div style={{ flex: 1 }}>
+              <CompactTile house={houses[2]} isLarge />
+            </div>
+            <div style={{ flex: 1 }}>
+              <CompactTile house={houses[3]} isLarge />
+            </div>
+          </div>
+          
+          {/* Bottom row: 1 wide tile */}
+          <div style={{ flex: 0.8, minHeight: 0 }}>
+            <CompactTile house={houses[4]} isLarge />
+          </div>
+        </div>
+      )}
 
       {/* Tab Bar */}
       <div className="tab-bar-container">
